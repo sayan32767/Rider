@@ -10,6 +10,7 @@ class Vehicle {
   final bool isPayAtPickupAvailable;
   final double rating;
   final String description;
+  final String brand;
 
   Vehicle({
     required this.id,
@@ -23,6 +24,7 @@ class Vehicle {
     required this.isPayAtPickupAvailable,
     required this.rating,
     required this.description,
+    required this.brand
   });
 
   factory Vehicle.fromJson(Map<String, dynamic> json) {
@@ -37,7 +39,8 @@ class Vehicle {
       isOfferAvailable: json['isOfferAvailable'],
       isPayAtPickupAvailable: json['isPayAtPickupAvailable'],
       rating: json['rating'],
-      description: json['description']
+      description: json['description'],
+      brand: json['brand'],
     );
   }
 
@@ -53,7 +56,8 @@ class Vehicle {
       'isOfferAvailable': isOfferAvailable,
       'isPayAtPickupAvailable': isPayAtPickupAvailable,
       'rating': rating,
-      'description': description
+      'description': description,
+      'brand': brand,
     };
   }
 }

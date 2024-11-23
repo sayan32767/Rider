@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rider/screens/auth/signup_screen.dart';
-import 'package:rider/screens/home/home_screen.dart';
+import 'package:rider/screens/home/search_screen.dart';
 import 'package:rider/services/auth_services.dart';
 import 'package:rider/utils/colors.dart';
 import 'package:rider/utils/gradient_scaffold.dart';
@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       showSnackBar(context, res);
     } else {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()));
+          MaterialPageRoute(builder: (context) => const SearchScreen()));
     }
   }
 

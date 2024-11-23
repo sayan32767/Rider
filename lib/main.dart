@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rider/firebase_options.dart';
 import 'package:rider/screens/auth/login_screen.dart';
-import 'package:rider/screens/home/home_screen.dart';
+import 'package:rider/screens/home/page_view.dart';
+import 'package:rider/screens/home/search_screen.dart';
 import 'package:rider/utils/colors.dart';
 
 void main() async {
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             if (snapshot.hasData) {
-              return HomeScreen();
+              return HomePage();
             } else if (snapshot.hasError) {
               return Center(
                 child: Text('${snapshot.error}'),

@@ -3,8 +3,9 @@ import 'package:rider/utils/colors.dart';
 
 class GradientScaffold extends StatelessWidget {
   final Widget body;
+  final AppBar? appBar;
 
-  const GradientScaffold({Key? key, required this.body}) : super(key: key);
+  const GradientScaffold({Key? key, required this.body, this.appBar}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,7 @@ class GradientScaffold extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: appBar,
         body: body,
       ),
     );

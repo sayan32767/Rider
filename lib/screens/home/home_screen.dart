@@ -4,6 +4,7 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:rider/components/vehicle_card.dart';
 import 'package:rider/models/vehicle.dart';
 import 'package:rider/screens/home/locations_screen.dart';
+import 'package:rider/screens/home/notifications_screen.dart';
 import 'package:rider/screens/home/search_screen.dart';
 import 'package:rider/services/navigation_services.dart';
 import 'package:rider/utils/colors.dart';
@@ -135,14 +136,28 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             Spacer(),
-            Icon(
-              MingCute.search_3_line
+            InkWell(
+              splashColor: Colors.transparent,
+              onTap: () {
+                Navigator.of(context)
+                .push(SlidePageRoute(page: SearchScreen()));
+              },
+              child: Icon(
+                MingCute.search_3_line
+              ),
             ),
             SizedBox(
               width: 20,
             ),
-            Icon(
-              MingCute.notification_line
+            InkWell(
+              splashColor: Colors.transparent,
+              onTap: () {
+                Navigator.of(context)
+                .push(SlidePageRoute(page: NotificationsScreen()));
+              },
+              child: Icon(
+                MingCute.notification_line
+              ),
             ),
           ],
         ),
@@ -188,6 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Stack(
                             children: [
                               Container(
+                                padding: EdgeInsets.only(top: 10),
                                 child: Align(
                                   alignment: Alignment.topCenter,
                                   child: Text(

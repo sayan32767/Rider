@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:rider/screens/chat/chat_screen.dart';
 import 'package:rider/screens/home/home_screen.dart';
 import 'package:rider/screens/home/search_screen.dart';
+import 'package:rider/screens/profile/profile_screen.dart';
 import 'package:rider/utils/colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,19 +20,31 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+      body: WillPopScope(
+        onWillPop: () async {
+          if (_pageController.page?.round() != 0) {
+            _pageController.previousPage(
+              duration: Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            );
+            return false;
+          }
+          return true;
         },
-        children: const [
-          HomeScreen(),
-          SearchScreen(),
-          ChatScreen(),
-          AccountScreen(),
-        ],
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          children: const [
+            HomeScreen(),
+            // SearchScreen(),
+            ChatScreen(),
+            AccountScreen(),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppColors.secondary,
@@ -53,10 +67,10 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(MingCute.home_1_line),
             label: "Home",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(MingCute.search_3_line),
-            label: "Search",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(MingCute.search_3_line),
+          //   label: "Search",
+          // ),
           BottomNavigationBarItem(
             icon: Icon(MingCute.chat_1_line),
             label: "Chat",
@@ -74,33 +88,5 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
-  }
-}
-
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "Chat Screen",
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-}
-
-class AccountScreen extends StatelessWidget {
-  const AccountScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "Account Screen",
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rider/screens/auth/signup_screen.dart';
+import 'package:rider/screens/home/home_screen.dart';
+import 'package:rider/screens/home/page_view.dart';
 import 'package:rider/screens/home/search_screen.dart';
 import 'package:rider/services/auth_services.dart';
 import 'package:rider/utils/colors.dart';
@@ -35,14 +37,15 @@ class _LoginScreenState extends State<LoginScreen> {
     String password = _passwordController.text;
     String res =
         await AuthMethods().loginUser(email: email, password: password);
+        if(mounted) {
     setState(() {
       _isLoading = false;
-    });
+    });}
     if (res != 'success') {
       showSnackBar(context, res);
     } else {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const SearchScreen()));
+          MaterialPageRoute(builder: (context) => const HomePage()));
     }
   }
 

@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:rider/components/text_field.dart';
 import 'package:rider/components/text_field_alt.dart';
 import 'package:rider/components/vehicle_card.dart';
 import 'package:rider/models/vehicle.dart';
+import 'package:rider/providers/user_provider.dart';
 import 'package:rider/screens/home/filter_screen.dart';
 import 'package:rider/screens/home/locations_screen.dart';
+import 'package:rider/screens/home/vehicle_details_page.dart';
 import 'package:rider/services/navigation_services.dart';
 import 'package:rider/utils/colors.dart';
 import 'package:rider/utils/gradient_scaffold.dart';
@@ -18,99 +22,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final List<Vehicle> vehicles = [
-    Vehicle(
-        id: "1",
-        name: "Royal Enfield Meteor 350",
-        brand: "Royal Enfield",
-        imageUrl:
-            "https://www.rentrip.in/uploads/products/bike/370x220/225064IMG_1550325631.webp",
-        pricePerDay: 1000.0,
-        deposit: 5000.0,
-        dealerLocation: "Beliaghata",
-        timings: "9:00 AM - 8:00 PM",
-        isOfferAvailable: true,
-        isPayAtPickupAvailable: true,
-        rating: 4.5,
-        description:
-            'If you are looking for a stylish bike that does not compromise on great features...'),
-    Vehicle(
-        id: "2",
-        name: "Honda Activa 6G",
-        brand: "HERO",
-        imageUrl:
-            "https://www.rentrip.in/uploads/products/bike/370x220/225064IMG_1550325631.webp",
-        pricePerDay: 500.0,
-        deposit: 2000.0,
-        dealerLocation: "Salt Lake",
-        timings: "8:00 AM - 10:00 PM",
-        isOfferAvailable: false,
-        isPayAtPickupAvailable: true,
-        rating: 4.3,
-        description:
-            'If you are looking for a stylish bike that does not compromise on great features...'),
-    Vehicle(
-        id: "2",
-        name: "Honda Activa 6G",
-        brand: "HERO",
-        imageUrl:
-            "https://www.rentrip.in/uploads/products/bike/370x220/225064IMG_1550325631.webp",
-        pricePerDay: 500.0,
-        deposit: 2000.0,
-        dealerLocation: "Salt Lake",
-        timings: "8:00 AM - 10:00 PM",
-        isOfferAvailable: false,
-        isPayAtPickupAvailable: true,
-        rating: 4.3,
-        description:
-            'If you are looking for a stylish bike that does not compromise on great features...'),
-    Vehicle(
-        id: "2",
-        name: "Honda Activa 6G",
-        brand: "HERO",
-        imageUrl:
-            "https://www.rentrip.in/uploads/products/bike/370x220/225064IMG_1550325631.webp",
-        pricePerDay: 500.0,
-        deposit: 2000.0,
-        dealerLocation: "Salt Lake",
-        timings: "8:00 AM - 10:00 PM",
-        isOfferAvailable: false,
-        isPayAtPickupAvailable: true,
-        rating: 4.3,
-        description:
-            'If you are looking for a stylish bike that does not compromise on great features...'),
-    Vehicle(
-        id: "2",
-        name: "Honda Activa 6G",
-        brand: "HERO",
-        imageUrl:
-            "https://www.rentrip.in/uploads/products/bike/370x220/225064IMG_1550325631.webp",
-        pricePerDay: 500.0,
-        deposit: 2000.0,
-        dealerLocation: "Salt Lake",
-        timings: "8:00 AM - 10:00 PM",
-        isOfferAvailable: false,
-        isPayAtPickupAvailable: true,
-        rating: 4.3,
-        description:
-            'If you are looking for a stylish bike that does not compromise on great features...'),
-    Vehicle(
-        id: "2",
-        name: "Honda Activa 6G",
-        brand: "HERO",
-        imageUrl:
-            "https://www.rentrip.in/uploads/products/bike/370x220/225064IMG_1550325631.webp",
-        pricePerDay: 500.0,
-        deposit: 2000.0,
-        dealerLocation: "Salt Lake",
-        timings: "8:00 AM - 10:00 PM",
-        isOfferAvailable: false,
-        isPayAtPickupAvailable: true,
-        rating: 4.3,
-        description:
-            'If you are looking for a stylish bike that does not compromise on great features...'),
-  ];
-
+  
   String searchText = "";
 
   final TextEditingController _searchController = TextEditingController();
@@ -125,12 +37,6 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return GradientScaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(MingCute.left_line, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         automaticallyImplyLeading: false,
         leadingWidth: 35,
         titleSpacing: 10,
@@ -167,13 +73,72 @@ class _SearchScreenState extends State<SearchScreen> {
               child: null),
           searchText.isNotEmpty
               ? Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: vehicles.length,
-                    itemBuilder: (context, index) {
-                      return VehicleCard(vehicle: vehicles[index]);
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('vehicles')
+                        .where("name", isGreaterThanOrEqualTo: searchText)
+                        .where('location.city', isEqualTo: Provider.of<UserProvider>(context, listen: false).getUser.location!)
+                        .where('isAvailable', isEqualTo: true)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                              color: Colors.yellow),
+                        );
+                      }
+                      if (!snapshot.hasData ||
+                          snapshot.data!.docs.isEmpty) {
+                        return Center(
+                          child: Text(
+                              'No results found!'),
+                        );
+                      }
+
+                      final vehicleDocs = snapshot.data!.docs;
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0),
+                        child: SizedBox(
+                          height:
+                              MediaQuery.of(context).size.height,
+                          child: GridView.builder(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10.0,
+                              mainAxisSpacing: 12.0,
+                              childAspectRatio: 0.72,
+                            ),
+                            itemCount: vehicleDocs.length,
+                            itemBuilder: (context, index) {
+                              Vehicle vehicle = Vehicle.fromJson(
+                                vehicleDocs[index].data()
+                                    as Map<String, dynamic>,
+                              );
+                        
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          VehicleDetailsPage(
+                                              vehicle: vehicle),
+                                    ),
+                                  );
+                                },
+                                child:
+                                    VehicleCard(vehicle: vehicle),
+                              );
+                            },
+                          ),
+                        ),
+                      );
                     },
-                  ),
+                  )
                 )
               : Expanded(
                   child: Center(

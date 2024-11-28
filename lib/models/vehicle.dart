@@ -1,63 +1,71 @@
+import 'package:rider/models/location.dart';
+
 class Vehicle {
   final String id;
   final String name;
-  final String imageUrl;
-  final double pricePerDay;
-  final double deposit;
-  final String dealerLocation;
-  final String timings;
-  final bool isOfferAvailable;
-  final bool isPayAtPickupAvailable;
-  final double rating;
-  final String description;
   final String brand;
+  final double price;
+  final int buyingYear;
+  final String description;
+  final String imageUrl;
+  final String fuelType;
+  final double mileage;
+  final String vehicleType;
+  final String sellerId;
+  final Location? location;
+  final bool? isAvailable;
 
   Vehicle({
     required this.id,
     required this.name,
-    required this.imageUrl,
-    required this.pricePerDay,
-    required this.deposit,
-    required this.dealerLocation,
-    required this.timings,
-    required this.isOfferAvailable,
-    required this.isPayAtPickupAvailable,
-    required this.rating,
+    required this.brand,
+    required this.price,
+    required this.buyingYear,
     required this.description,
-    required this.brand
+    required this.imageUrl,
+    required this.fuelType,
+    required this.mileage,
+    required this.vehicleType,
+    required this.sellerId,
+    this.location,
+    this.isAvailable,
   });
-
-  factory Vehicle.fromJson(Map<String, dynamic> json) {
-    return Vehicle(
-      id: json['id'],
-      name: json['name'],
-      imageUrl: json['imageUrl'],
-      pricePerDay: json['pricePerDay'],
-      deposit: json['deposit'],
-      dealerLocation: json['dealerLocation'],
-      timings: json['timings'],
-      isOfferAvailable: json['isOfferAvailable'],
-      isPayAtPickupAvailable: json['isPayAtPickupAvailable'],
-      rating: json['rating'],
-      description: json['description'],
-      brand: json['brand'],
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
-      'imageUrl': imageUrl,
-      'pricePerDay': pricePerDay,
-      'deposit': deposit,
-      'dealerLocation': dealerLocation,
-      'timings': timings,
-      'isOfferAvailable': isOfferAvailable,
-      'isPayAtPickupAvailable': isPayAtPickupAvailable,
-      'rating': rating,
-      'description': description,
       'brand': brand,
+      'price': price,
+      'buyingYear': buyingYear,
+      'description': description,
+      'imageUrl': imageUrl,
+      'fuelType': fuelType,
+      'mileage': mileage,
+      'vehicleType': vehicleType,
+      'sellerId': sellerId,
+      'location': location?.toJson(),
+      'isAvailable': isAvailable ?? false
     };
+  }
+
+  factory Vehicle.fromJson(Map<String, dynamic> json) {
+    return Vehicle(
+      id: json['id'],
+      name: json['name'],
+      brand: json['brand'],
+      price: json['price'],
+      buyingYear: json['buyingYear'],
+      description: json['description'],
+      imageUrl: json['imageUrl'],
+      fuelType: json['fuelType'],
+      mileage: json['mileage'],
+      vehicleType: json['vehicleType'],
+      sellerId: json['sellerId'],
+      location: json['location'] != null
+          ? Location.fromJson(json['location'])
+          : null,
+      isAvailable: json['isAvailable'] ?? false
+    );
   }
 }

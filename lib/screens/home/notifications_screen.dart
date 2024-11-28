@@ -28,7 +28,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         title: Text('Notifications'),
       ),
       body: Center(
-        child: Text('Notifications will go here'),
+        child: Text('No Notifications'),
       ),
     );
   }

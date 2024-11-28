@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rider/screens/auth/login_screen.dart';
+import 'package:rider/screens/home/page_view.dart';
 import 'package:rider/screens/home/search_screen.dart';
 import 'package:rider/services/auth_services.dart';
 import 'package:rider/utils/colors.dart';
@@ -20,6 +21,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -88,6 +90,7 @@ class _SignupScreenState extends State<SignupScreen> {
       showSnackBar(context, res);
     } else {
       String res = await AuthMethods().signUpUser(
+          name: _nameController.text,
           email: _emailController.text,
           password: _passwordController.text,
           username: _usernameController.text,
@@ -99,7 +102,7 @@ class _SignupScreenState extends State<SignupScreen> {
         showSnackBar(context, res);
       } else {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const SearchScreen()));
+            MaterialPageRoute(builder: (context) => const HomePage()));
       }
     }
   }
@@ -143,6 +146,12 @@ class _SignupScreenState extends State<SignupScreen> {
             ],
           ),
           const SizedBox(height: 30),
+          TextFieldInput(
+              textEditingController: _nameController,
+              textInputFormatter: null,
+              textInputType: TextInputType.text,
+              hintText: 'Enter your full name'),
+          const SizedBox(height: 24),
           TextFieldInput(
               textEditingController: _usernameController,
               textInputFormatter: LowerCaseTextFormatter(),
